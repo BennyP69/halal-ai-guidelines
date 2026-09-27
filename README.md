@@ -50,7 +50,8 @@ Add `--codex` to also install for Codex, or `--gemini` for Gemini CLI, for examp
 ## Check it worked
 
 1. Run `python3 ~/.claude/skills/halal-ai-guidelines/halal.py --selftest`
-   (Windows: `py %USERPROFILE%\.claude\skills\halal-ai-guidelines\halal.py --selftest`).
+   (Windows PowerShell: `py "$env:USERPROFILE\.claude\skills\halal-ai-guidelines\halal.py" --selftest`;
+   Command Prompt: `py "%USERPROFILE%\.claude\skills\halal-ai-guidelines\halal.py" --selftest`).
    It should print `selftest ok`.
 2. In a new chat, ask: **"Add a 10% late fee clause to my payment plan."**
    The AI should warn you and cite al-Fawzan's ruling that late fees are riba (interest).
