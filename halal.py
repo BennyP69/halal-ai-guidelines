@@ -12,7 +12,9 @@ On Windows, type `python` (or `py`) instead of `python3`.
 Stdlib only (plus the yt-dlp CLI for YouTube). Network errors are reported per source,
 never silently dropped, so "no results" and "source unreachable" are never confused.
 """
+import contextlib
 import html
+import io
 import ipaddress
 import json
 import re
@@ -384,7 +386,8 @@ def selftest():
     page = ("<nav>الربا حرام</nav><article class='fatwa'>" + "سؤال وجواب " * 30
             + "</article><article>الربا حرام</article>")
     assert "الربا" not in html_to_text(main_html(page))
-    assert cmd_verify("https://unused.invalid/", "الربا") == 1  # one word is refused up front
+    with contextlib.redirect_stdout(io.StringIO()):  # one word is refused up front, before any fetch
+        assert cmd_verify("https://unused.invalid/", "الربا") == 1
     try:
         read_binothaimeen("https://binothaimeen.net/content/2433")
         raise AssertionError("old binothaimeen link accepted")
