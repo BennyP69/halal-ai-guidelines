@@ -110,10 +110,11 @@ def html_to_text(s):
 
 def main_html(h):
     """The page's main answer without menus and 'related' sidebars: the <article> with the most
-    text, else <main>, else the whole page."""
+    text, else <main>, else the whole page. A short answer is still the answer: falling back to
+    the whole page would let menus match again (binbaz fatwa 25404 is only ~217 characters)."""
     blocks = re.findall(r"(?is)<article\b.*?</article>", h) or re.findall(r"(?is)<main\b.*?</main>", h)
     best = max(blocks, key=lambda b: len(html_to_text(b)), default="")
-    return best if len(html_to_text(best)) >= MIN_TEXT else h
+    return best if html_to_text(best) else h
 
 
 def page_title(h):
@@ -276,10 +277,11 @@ def cmd_read(url, quiet=False):
                                "report this source as unreachable)")
         if "Just a moment" in page[:3000]:
             raise RuntimeError("site blocks scripts (Cloudflare). Open it with your web-fetch tool.")
-        text = html_to_text(main_html(page))
-        if len(text) < MIN_TEXT:
-            raise RuntimeError(f"only {len(text)} characters of text: the page is probably built "
+        whole = len(html_to_text(page))
+        if whole < MIN_TEXT:  # the whole page, not the answer: short answers are allowed
+            raise RuntimeError(f"only {whole} characters of text: the page is probably built "
                                "by JavaScript. Open it with your web-fetch tool.")
+        text = html_to_text(main_html(page))
         text = f"PAGE TITLE: {page_title(page)}\n\n{text}"
     if not quiet:
         print(f"URL: {url}\n\n{text}")
@@ -386,6 +388,8 @@ def selftest():
     page = ("<nav>الربا حرام</nav><article class='fatwa'>" + "سؤال وجواب " * 30
             + "</article><article>الربا حرام</article>")
     assert "الربا" not in html_to_text(main_html(page))
+    short = "<nav>" + "الربا حرام " * 40 + "</nav><article>هذا قمار</article><article>x</article>"
+    assert html_to_text(main_html(short)) == "هذا قمار"  # a short answer still excludes menus
     with contextlib.redirect_stdout(io.StringIO()):  # one word is refused up front, before any fetch
         assert cmd_verify("https://unused.invalid/", "الربا") == 1
     try:
