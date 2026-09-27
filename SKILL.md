@@ -35,11 +35,14 @@ Never lecture. The check changes WHAT you do; it does not add sermons to unrelat
 
 Read `library.md` in this folder. If a checked record covers the exact case and its
 conditions match, use it (still show its source link). Different facts = not covered.
+Before quoting a record, run `verify` (Step 4) on its quote: sites move pages. If it no longer
+passes, do not quote it; say the record needs rechecking and search again.
 
 ## Step 2 - Search the sources
 
 `<skill-folder>` below means the folder this SKILL.md file is in (usually
 `~/.claude/skills/halal-ai-guidelines`, or `~/.codex/skills/halal-ai-guidelines` for Codex).
+On Windows, run `python` (or `py`) where these commands say `python3`.
 
 Run the helper (it searches several sources in parallel and lists what it could not reach):
 
@@ -63,7 +66,11 @@ python3 <skill-folder>/halal.py read URL
 - Base the ruling on the original Arabic when it exists. If you translate, label it "my
   translation" and give the key Arabic term with its meaning (e.g. ربا riba = interest/usury).
   A site's own translation is labeled "site translation".
-- If `read` says a site blocks scripts, open it with your web-fetch tool.
+- If `read` fails, try your web-fetch tool. If that fails too, say the source was
+  unreachable. Never quote from memory or from a search-result snippet.
+- binothaimeen.net: use the page link that ends in a long ID
+  (`.../ar/voice_library/lessonDetails/<section>/<title>/<id>`); `read` gets the text from the
+  site's own data. Old `binothaimeen.net/content/<number>` links open a blank page.
 - YouTube captions are auto-generated and often wrong, and a channel name does not prove who
   is speaking. Treat a video as a LEAD: name the speaker and timestamp, mark it "unchecked
   captions", and never present caption text as an exact quote.
@@ -76,8 +83,12 @@ Before you quote anything, confirm it is really on the page:
 python3 <skill-folder>/halal.py verify URL "exact words"
 ```
 
-FOUND = you may quote it. NOT FOUND or UNVERIFIED = do not quote it; paraphrase with the
-link and say it is a paraphrase, or drop it.
+FOUND = you may quote it; read the CONTEXT line it prints to confirm the words mean what you
+claim. NOT FOUND, UNVERIFIED or TOO SHORT = do not quote it; paraphrase with the link and say
+it is a paraphrase, or drop it. Verify whole phrases, not single words. `verify` only checks
+the page's main answer, so words that appear only in menus or "related" lists do not count.
+
+`python3 <skill-folder>/halal.py recheck` re-verifies every quote in `library.md`.
 
 ## Step 5 - Answer in this shape
 

@@ -3,7 +3,11 @@
 Only records whose source was actually opened and read. Each says what was and was not
 checked. A record covers ONLY the case it describes; different facts need a new check.
 
-Record format for new entries:
+Every «quote» below was re-verified against its link on 2026-09-27 (`python3 halal.py
+recheck`). Sites move pages, so before quoting a record, run `halal.py verify` on its quote;
+if it fails, say the record needs rechecking instead of quoting it.
+
+Record format for new entries (put every verified excerpt inside « », so `recheck` tests it):
 
 ```
 ### <short topic>
@@ -18,11 +22,14 @@ Record format for new entries:
 - Added: <date>, verified by halal.py verify: yes/no
 ```
 
+Links: store the full page link as the site shows it (for binbaz.org.sa the one with the title
+after the number; for binothaimeen.net the one ending in an ID).
+
 ---
 
 ### Passing on a scholar's ruling
 - Question: Someone repeats a fatwa they heard on the radio program Nur 'ala al-Darb.
-- Authority: Ibn Baz | Source: https://binbaz.org.sa/fatwas/10976/
+- Authority: Ibn Baz | Source: https://binbaz.org.sa/fatwas/10976/%D8%AD%D9%83%D9%85-%D9%85%D9%86-%D8%A7%D9%81%D8%AA%D9%89-%D8%A8%D9%85%D8%A7-%D8%B3%D9%85%D8%B9%D9%87-%D9%85%D9%86-%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC-%D9%86%D9%88%D8%B1-%D8%B9%D9%84%D9%89-%D8%A7%D9%84%D8%AF%D8%B1%D8%A8
 - Checked: Arabic question and answer on the official archive. Audio not checked.
 - Words: «تنسبه إلى صاحبه» - "attribute it to its owner" (my translation)
 - Ruling: Allowed to pass on a ruling accurately, attributed to the scholar, when it was
@@ -32,7 +39,7 @@ Record format for new entries:
 
 ### Working in a bank that deals in riba
 - Question: Working in banks, and depositing money in them.
-- Authority: Ibn Baz | Source: https://binbaz.org.sa/fatwas/19005/ (cites Majmu' Fatawa wa
+- Authority: Ibn Baz | Source: https://binbaz.org.sa/fatwas/19005/%D8%AD%D9%83%D9%85-%D8%A7%D9%84%D8%B9%D9%85%D9%84-%D9%81%D9%8A-%D8%A7%D9%84%D8%A8%D9%86%D9%88%D9%83-%D9%88%D8%AD%D9%83%D9%85-%D9%88%D8%B6%D8%B9-%D8%A7%D9%84%D8%A7%D9%85%D9%88%D8%A7%D9%84-%D9%81%D9%8A%D9%87%D8%A7 (cites Majmu' Fatawa wa
   Maqalat 19/415; Fatawa Islamiyyah 2/397)
 - Checked: Arabic on the official archive. Printed editions not compared.
 - Words: «لأن ذلك إعانة لهم على الإثم والعدوان» - "because that is helping them in sin and
@@ -44,7 +51,7 @@ Record format for new entries:
 
 ### Working at a company that has some interest dealings
 - Question: Working for a company that deals with interest-based banks.
-- Authority: Ibn Baz | Source: https://binbaz.org.sa/fatwas/5400/
+- Authority: Ibn Baz | Source: https://binbaz.org.sa/fatwas/5400/%D8%AD%D9%83%D9%85-%D8%A7%D9%84%D8%B9%D9%85%D9%84-%D9%81%D9%8A-%D8%B4%D8%B1%D9%83%D8%A9-%D8%AA%D8%AA%D8%B9%D8%A7%D9%85%D9%84-%D9%85%D8%B9-%D8%A7%D9%84%D8%A8%D9%86%D9%88%D9%83-%D8%A7%D9%84%D8%B1%D8%A8%D9%88%D9%8A%D8%A9
 - Checked: Full Arabic on the official archive. Audio not checked.
 - Words: «لكن كونه يعمل الربا بنفسه أو يساعد عليه» - "but for him to do riba himself or help
   with it" (my translation). Verified by halal.py verify on 2026-09-19.
@@ -74,19 +81,19 @@ Record format for new entries:
   (trans. Abdullah Abdul-Wahid Alam, v1.0 02 Aug 2023; original video embedded on page)
 - Checked: Site translation in full. Arabic original not checked (video only, captions
   not verified).
-- Words: "This is the Riba (usury) of Jahiliyyah (pre-Islamic ignorance) and it is not
-  permitted" (site translation). Verified by halal.py verify on 2026-09-19.
+- Words: «This is the Riba (usury) of Jahiliyyah (pre-Islamic ignorance) and it is not
+  permitted» (site translation). Verified by halal.py verify on 2026-09-19.
 - Ruling: Al-Fawzan: a late fee that increases the debt because payment is delayed is the
   riba of Jahiliyyah ("pay now or pay more") and is forbidden for both parties to agree to.
 - Conditions: What IS allowed per the same page: setting a higher price at contract time
   for deferred payment, or a discount for early/upfront payment - agreed before the sale,
-  never added later for delay ("it is allowed for him to sell for a higher price if his
-  payment is to be delayed", verified same date). Supporting: Abu Khadeejah's mortgages
-  article, "It is not allowed to charge a late fee if the instalment is paid late because
-  that is clear riba" - even if the fee is given to charity - citing Al-Majma' al-Fiqh
+  never added later for delay («it is allowed for him to sell for a higher price if his
+  payment is to be delayed», verified same date). Supporting: Abu Khadeejah's mortgages
+  article, «It is not allowed to charge a late fee if the instalment is paid late because
+  that is clear riba» - even if the fee is given to charity - citing Al-Majma' al-Fiqh
   al-Islami, 6th gathering, Jeddah 1410AH/1990CE
   (https://abukhadeejah.com/islamic-mortgages-shariah-compliant-murabah-ijarah-musharakah-riba-instalments/,
-  verified same date). Related principle: Ibn Baz https://binbaz.org.sa/fatwas/7166/ (Arabic
+  verified same date). Related principle: Ibn Baz https://binbaz.org.sa/fatwas/7166/%D8%AD%D9%83%D9%85-%D9%82%D8%B6%D8%A7%D8%A1-%D8%A7%D9%84%D8%AF%D9%8A%D9%86-%D8%A8%D8%B2%D9%8A%D8%A7%D8%AF%D8%A9-%D9%84%D8%A7%D8%AC%D9%84-%D8%A7%D9%84%D8%AA%D8%A7%D8%AE%D9%8A%D8%B1 (Arabic
   read in full): money paid in exchange for extending a debt's time is riba even if called
   a gift.
 - Evidence cited by the source: Qur'an 2:280 referenced in the mortgages article (grant
@@ -99,10 +106,10 @@ Record format for new entries:
 ### Bank credit card paid off before interest is charged
 - Question: Bank cards where bills are charged to the account; if the balance does not cover
   them, the bank charges interest at set rates. Ruling, and what to do if it happened before?
-- Authority: Ibn Uthaymeen | Source: https://binothaimeen.net/content/2433
-- Checked: Full Arabic Q&A. Page renders via JavaScript, so text was pulled from the site's
-  own API (shekhapi.binothaimeen.net/lessons/audios/show/d99247cf-9872-44ed-a6e4-d2c6e9ca85da/0/1)
-  and each quote confirmed present in that official response. Audio not checked.
+- Authority: Ibn Uthaymeen | Source: https://binothaimeen.net/ar/voice_library/lessonDetails/%D9%85%D8%B9%D8%A7%D9%85%D9%84%D8%A7%D8%AA%20%D9%85%D8%B9%D8%A7%D8%B5%D8%B1%D8%A9/%D8%AD%D9%83%D9%85%20%D8%A8%D8%B7%D8%A7%D9%82%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%A6%D8%AA%D9%85%D8%A7%D9%86%20%D8%A7%D9%84%D8%A8%D9%86%D9%83%D9%8A%D8%A9/d99247cf-9872-44ed-a6e4-d2c6e9ca85da
+- Checked: Full Arabic Q&A. The page is built by JavaScript, so `halal.py read` pulls the text
+  from the site's own data API using the ID at the end of the link. Audio not checked.
+  (Old link binothaimeen.net/content/2433 now opens a blank page.)
 - Words: «هذه المعاملة حرام؛ لأنها معاملة على التزام الربا، وهو إن كان يدفع قبل أن يحل عليه
   الربا، لكنه قد دخل على التزام الربا، فهي حرام» - "This transaction is haram, because it is a
   transaction upon a commitment to riba. Even if he pays before the riba falls due, he has
@@ -120,8 +127,8 @@ Record format for new entries:
 ### Same case, second answer: Visa card paid within the free period
 - Question: Banks issue a (Visa) card; you take an amount and repay the same amount within
   45-50 days, no interest taken. Ruling?
-- Authority: Ibn Uthaymeen | Source: https://binothaimeen.net/content/4151 (same API method as
-  above, item 45bd7935-037b-414a-8230-605b8574a4db)
+- Authority: Ibn Uthaymeen | Source: https://binothaimeen.net/ar/voice_library/lessonDetails/%D9%85%D8%B9%D8%A7%D9%85%D9%84%D8%A7%D8%AA%20%D9%85%D8%B9%D8%A7%D8%B5%D8%B1%D8%A9/%D8%AD%D9%83%D9%85%20%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%20%D8%A8%D8%B7%D8%A7%D9%82%D8%A9%20%D8%A7%D9%84%D9%81%D9%8A%D8%B2%D8%A7%20%20/45bd7935-037b-414a-8230-605b8574a4db
+  (same data-API method as above)
 - Checked: Full Arabic Q&A via the official API; quotes confirmed present. Audio not checked.
 - Words: «فأصل دخوله على مبدأ الربا حرام» - "so the very act of entering upon the principle of
   riba is haram" (my translation); also «وهذا حرام لا يجوز» - "this is haram, not permissible".
@@ -132,8 +139,8 @@ Record format for new entries:
 ### Plain withdrawal (debit) card with no riba clause
 - Question: The withdrawal card called (Visa) used when traveling to withdraw one's own money
   abroad instead of carrying cash. Ruling on withdrawing with it?
-- Authority: Ibn Uthaymeen | Source: binothaimeen.net official API item
-  e36b5411-ee1f-4da8-a058-450486ac00f3 (site page is JS-rendered; likely content/3508)
+- Authority: Ibn Uthaymeen | Source: https://binothaimeen.net/ar/voice_library/lessonDetails/%D9%85%D8%B9%D8%A7%D9%85%D9%84%D8%A7%D8%AA%20%D9%85%D8%B9%D8%A7%D8%B5%D8%B1%D8%A9/%D8%AD%D9%83%D9%85%20%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%20%D8%A8%D8%B7%D8%A7%D9%82%D8%A9%20%D8%A7%D9%84%D9%81%D9%8A%D8%B2%D8%A7%20/e36b5411-ee1f-4da8-a058-450486ac00f3
+  (same data-API method as above)
 - Checked: Full Arabic Q&A via the official API; quotes confirmed present. Audio not checked.
 - Words: «لا بأس للإنسان أن يستعمل الفيزة» - "there is no harm in a person using the Visa"
   (my translation); «الأصل في جميع المعاملات الحل والإباحة» - "the default in all dealings is
@@ -148,7 +155,7 @@ Record format for new entries:
 - Question: A bank gives a person the price of a farm machine so he can take it from a
   company, and he repays the bank in installments over three years with a known increase
   over the current price - is this riba or a deferred sale?
-- Authority: Ibn Baz | Source: https://binbaz.org.sa/fatwas/12835/
+- Authority: Ibn Baz | Source: https://binbaz.org.sa/fatwas/12835/%D8%AD%D9%83%D9%85-%D8%AF%D9%81%D8%B9-%D8%A7%D9%84%D8%A8%D9%86%D9%83-%D9%82%D9%8A%D9%85%D8%A9-%D8%A7%D9%84%D8%B3%D9%84%D8%B9%D8%A9-%D9%84%D9%84%D9%85%D9%82%D8%AA%D8%B1%D8%B6-%D9%88%D8%AA%D9%82%D8%B3%D9%8A%D8%B7-%D8%A7%D9%84%D9%85%D8%A8%D9%84%D8%BA-%D8%A8%D8%B2%D9%8A%D8%A7%D8%AF%D8%A9
 - Checked: Full Arabic Q&A on the official archive. Audio not checked.
 - Words: «هذا يعتبر من الربا» - "this is considered riba" (my translation); «ما يجوز هذه
   الزيادة ربا، ولا يكون بيعًا، هذا قرض» - "this increase is not allowed, it is riba; it is
@@ -171,8 +178,8 @@ Record format for new entries:
 ### Pay-to-enter prize draw / lottery (yanasib)
 - Question: (a) Lottery operations organized by charitable bodies to fund education, medical
   care, and social services - allowed? (b) The lottery found outside this country - ruling?
-- Authority: Ibn Baz | Sources: https://binbaz.org.sa/fatwas/17536/ (cites Fatawa Islamiyyah
-  vol 4 p 442; Majmu' Fatawa 19/58) and https://binbaz.org.sa/fatwas/25404/
+- Authority: Ibn Baz | Sources: https://binbaz.org.sa/fatwas/17536/%D8%A7%D9%84%D9%8A%D8%A7%D9%86%D8%B5%D9%8A%D8%A8-%D9%85%D9%86-%D8%A7%D8%B9%D9%85%D8%A7%D9%84-%D8%A7%D9%84%D9%82%D9%85%D8%A7%D8%B1-%D8%A7%D9%84%D9%85%D8%AD%D8%B1%D9%85%D8%A9 (cites Fatawa Islamiyyah
+  vol 4 p 442; Majmu' Fatawa 19/58) and https://binbaz.org.sa/fatwas/25404/%D9%85%D8%A7-%D8%AD%D9%83%D9%85-%D9%85%D8%A7-%D9%8A%D8%B3%D9%85%D9%89-%D8%A7%D9%84%D9%8A%D8%A7%D9%86%D8%B5%D9%8A%D8%A8
 - Checked: Full Arabic Q&A on the official archive for both. Audio not checked.
 - Words: «عنوان لعب القمار» + «وهو الميسر، وهو محرم بالكتاب والسنة والإجماع» - "the very name
   of playing qimar (gambling) ... it is maysir, forbidden by the Book, the Sunnah, and

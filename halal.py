@@ -259,7 +259,7 @@ def read_youtube(url):
 
 
 def cmd_read(url, quiet=False):
-    host = (urllib.parse.urlsplit(url).hostname or "").removeprefix("www.")
+    host = re.sub(r"^www\.", "", urllib.parse.urlsplit(url).hostname or "")
     if host == "salafitranslations.com":
         text = read_salafitranslations(urllib.parse.urlsplit(url).path.strip("/"))
     elif host in ("youtube.com", "m.youtube.com", "youtu.be"):
@@ -349,10 +349,10 @@ def cmd_recheck(path=None):
             total += 1
             hit = next((u for u in urls if isinstance(cache[u], str) and normalize(qt) in cache[u]), None)
             if hit:
-                print(f"  FOUND       «{qt[:50]}» on {urllib.parse.unquote(hit)[:90]}")
+                print(f"  FOUND       «{' '.join(qt.split())[:50]}» on {urllib.parse.unquote(hit)[:90]}")
             else:
                 bad += 1
-                print(f"  NOT FOUND   «{qt[:50]}»")
+                print(f"  NOT FOUND   «{' '.join(qt.split())[:50]}»")
         if not quotes:
             print("  (no «quotes» in this record)")
     print(f"\n== {total - bad}/{total} quotes FOUND ({date.today()}).")

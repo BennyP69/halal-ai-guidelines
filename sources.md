@@ -1,6 +1,7 @@
 # Approved sources
 
 Core list adopted September 12, 2026. Official Arabic archives added September 19, 2026.
+Reachability last checked September 27, 2026.
 
 ## Authorities (not ranked)
 
@@ -22,20 +23,20 @@ above; confirm the full name on the actual source before attributing.
 
 ## Official Arabic archives (original wording)
 
-| Site | Scholar | How to search | Status 2026-09-19 |
+| Site | Scholar | How to search | Status 2026-09-27 |
 |---|---|---|---|
-| binbaz.org.sa | Ibn Baz | web search `site:binbaz.org.sa` + Arabic terms; pages readable by `read` | OK |
-| binothaimeen.net | Uthaymeen | web search `site:binothaimeen.net`; pages readable by `read` | OK |
-| alfawzan.af.org.sa | al-Fawzan | web search `site:alfawzan.af.org.sa` | did not respond from this Mac |
-| alifta.gov.sa | Permanent Committee | web search `site:alifta.gov.sa` | OK (app-style site) |
+| binbaz.org.sa | Ibn Baz | web search `site:binbaz.org.sa` + Arabic terms; `read` works | OK. Use the full link with the title after the number; a bare `/fatwas/N/` link opens a different fatwa (`read` corrects it and checks the number) |
+| binothaimeen.net | Uthaymeen | web search `site:binothaimeen.net`; `read` works on links ending in an ID | OK via the site's own data. Old `/content/N` links open a blank page |
+| alfawzan.af.org.sa | al-Fawzan | web search `site:alfawzan.af.org.sa` | Unreachable: the site's security certificate has expired. Find his answers through translators (abukhadeejah.com, salafitranslations.com) and say so |
+| alifta.gov.sa | Permanent Committee | web search `site:alifta.gov.sa` | Unreachable from scripts: times out, or redirects to a private network address (refused) |
 
 ## English sites (owner's list)
 
 | Site | How to search | Notes |
 |---|---|---|
-| abukhadeejah.com | `halal.py search` (site search API) | Articles by Abu Khadeejah; many translate the scholars |
-| salafitranslations.com | `halal.py search` (476 records, often with Arabic original) | Mostly 'Arafat al-Muhammadi, also Fawzan, Uthaymeen |
-| troid.org | web search `site:troid.org`; `read` is blocked, use web-fetch | Translations with book/page references |
+| abukhadeejah.com | `halal.py search` (site search API) | Articles by Abu Khadeejah; many translate the scholars. `read` works |
+| salafitranslations.com | `halal.py search` (476 records, often with Arabic original) | Mostly 'Arafat al-Muhammadi, also Fawzan, Uthaymeen. `read` works |
+| troid.org | web search `site:troid.org` | Blocks scripts and most web-fetch tools (HTTP 403). If you cannot open the page, say it was unreachable; do not quote it |
 
 ## YouTube channels (owner's list, searched by `halal.py search`)
 
