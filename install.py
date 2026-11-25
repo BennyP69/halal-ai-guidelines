@@ -71,4 +71,8 @@ if __name__ == "__main__":
         install(t)
     if not shutil.which("yt-dlp"):
         print("Note: yt-dlp not found, so YouTube search is skipped. Optional: https://github.com/yt-dlp/yt-dlp")
+    try:
+        import youtube_transcript_api  # noqa: F401
+    except ImportError:
+        print("Note: for reliable YouTube captions: python3 -m pip install youtube-transcript-api")
     print("Done. Open a NEW chat to use it.")

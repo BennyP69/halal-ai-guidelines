@@ -9,10 +9,15 @@ and verify that a quote really appears on a source page.
   python3 halal.py --selftest
 
 On Windows, type `python` (or `py`) instead of `python3`.
-Stdlib only (plus the yt-dlp CLI for YouTube). Network errors are reported per source,
+Stdlib only, plus for YouTube: the yt-dlp CLI (search, and reading as a fallback) and,
+when installed, the youtube-transcript-api package (reading; it gets through where yt-dlp's
+caption download is rate limited). Network errors are reported per source,
 never silently dropped, so "no results" and "source unreachable" are never confused.
 """
 import contextlib
+import os
+import shutil
+import time
 import html
 import io
 import ipaddress
@@ -42,6 +47,7 @@ WEB_SEARCH_SITES = ["binbaz.org.sa", "binothaimeen.net", "alfawzan.af.org.sa",
                     "alifta.gov.sa", "troid.org"]
 UUID = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
 MIN_TEXT = 200  # fewer characters than this = an empty shell page, not an answer
+FAKE_IP_RANGE = ipaddress.ip_network("198.18.0.0/15")
 
 
 # ---------------------------------------------------------------- fetch
@@ -57,6 +63,11 @@ def check_public(url):
         raise RuntimeError(f"cannot find {p.hostname} ({e})")
     for info in infos:
         ip = ipaddress.ip_address(info[4][0].split("%")[0])
+        # 198.18.0.0/15 is reserved for network testing (RFC 2544) and never used by a real
+        # site or a home network. Proxies in "fake-ip" mode (as on the AI bots' computer) answer
+        # every name with one and then connect to the real site by name, so it is allowed.
+        if ip in FAKE_IP_RANGE:
+            continue
         if not ip.is_global:
             raise RuntimeError(f"{p.hostname} points to a private/local address ({ip}); refused")
     # ponytail: checked before connecting, not pinned; a DNS-rebinding host could still swap
@@ -140,9 +151,17 @@ def search_salafitranslations(q, ar=None):
              "url": "https://salafitranslations.com/" + x["slug"]} for x in items]
 
 
+def ytdlp():
+    """yt-dlp on PATH, else the one installed next to this Python (a venv's bin folder)."""
+    found = shutil.which("yt-dlp") or shutil.which("yt-dlp", path=os.path.dirname(sys.executable))
+    if not found:
+        raise RuntimeError("yt-dlp is not installed for this Python (pip install yt-dlp)")
+    return found
+
+
 def search_youtube_channel(ch, q):
     url = f"https://www.youtube.com/@{ch}/search?query=" + urllib.parse.quote(q)
-    out = subprocess.run(["yt-dlp", "--flat-playlist", "--playlist-end", "3",
+    out = subprocess.run([ytdlp(), "--flat-playlist", "--playlist-end", "3",
                           "--print", "%(id)s|%(title)s", url],
                          capture_output=True, encoding="utf-8", errors="replace", timeout=90)
     hits = []
@@ -239,9 +258,83 @@ def vtt_to_text(path):
     return "\n".join(lines)
 
 
+def video_id(url):
+    p = urllib.parse.urlsplit(url)
+    if p.hostname and p.hostname.endswith("youtu.be"):
+        vid = p.path.strip("/").split("/")[0]
+    else:
+        vid = (urllib.parse.parse_qs(p.query).get("v") or [""])[0] or \
+              (re.findall(r"/(?:shorts|live|embed)/([\w-]{11})", p.path) or [""])[0]
+    return vid if re.fullmatch(r"[\w-]{11}", vid) else None
+
+
+def stamp(seconds):
+    s = int(seconds)
+    return f"{s // 3600:02d}:{s % 3600 // 60:02d}:{s % 60:02d}"
+
+
+RETRY_WAITS = (120, 300)  # seconds between tries; YouTube's short block usually lifts by then
+
+
+def read_youtube_api(url):
+    """Captions through youtube-transcript-api. None when the package is not installed."""
+    try:
+        from youtube_transcript_api import YouTubeTranscriptApi
+    except ImportError:
+        return None
+    vid = video_id(url)
+    if not vid:
+        raise RuntimeError("not a YouTube video link")
+    for attempt in range(len(RETRY_WAITS) + 1):
+        try:
+            tracks = [t for t in YouTubeTranscriptApi().list(vid)
+                      if t.language_code.split("-")[0] in ("ar", "en")]
+            if not tracks:
+                raise RuntimeError("no captions available for this video")
+            parts = []
+            for t in tracks:
+                lines = [f"[{stamp(s.start)}] {s.text.strip()}" for s in t.fetch() if s.text.strip()]
+                kind = "auto-captions may contain errors" if t.is_generated else "made by the channel"
+                parts.append(f"CAPTIONS ({t.language_code}, {kind}):\n" + "\n".join(lines))
+            break
+        except Exception as e:
+            # a block (rate limit) is NOT "this video has no captions": wait, then retry
+            if type(e).__name__ in ("RequestBlocked", "IpBlocked") and attempt < len(RETRY_WAITS):
+                time.sleep(RETRY_WAITS[attempt])
+                continue
+            if type(e).__name__ in ("RequestBlocked", "IpBlocked"):
+                raise RuntimeError(f"YouTube is blocking this computer's address for now "
+                                   f"(still blocked after waiting {sum(RETRY_WAITS) // 60} minutes)")
+            raise
+    try:
+        meta = json.loads(fetch("https://www.youtube.com/oembed?format=json&url="
+                                + urllib.parse.quote(f"https://www.youtube.com/watch?v={vid}")))
+        head = f"TITLE: {meta.get('title')} | CHANNEL: {meta.get('author_name')}"
+    except Exception as e:
+        head = f"TITLE: unknown ({str(e)[:80]})"
+    return "\n\n".join([head] + parts)
+
+
 def read_youtube(url):
+    errors = []
+    try:
+        text = read_youtube_api(url)
+        if text:
+            return text
+    except Exception as e:
+        if "no captions available" in str(e):
+            raise
+        first = next((ln for ln in str(e).splitlines() if ln.strip()), type(e).__name__)
+        errors.append(f"youtube-transcript-api: {first[:150]}")
+    try:
+        return read_youtube_ytdlp(url)
+    except Exception as e:
+        raise RuntimeError("; ".join(errors + [str(e)]))
+
+
+def read_youtube_ytdlp(url):
     with tempfile.TemporaryDirectory() as d:
-        out = subprocess.run(["yt-dlp", "--skip-download", "--write-subs", "--write-auto-subs",
+        out = subprocess.run([ytdlp(), "--skip-download", "--write-subs", "--write-auto-subs",
                               "--sub-langs", "ar,en,en-orig,ar-orig", "--sub-format", "vtt",
                               "--print", "before_dl:TITLE: %(title)s | CHANNEL: %(channel)s | DATE: %(upload_date)s",
                               "-o", f"{d}/%(id)s.%(ext)s", url],
@@ -377,6 +470,16 @@ def selftest():
             raise AssertionError(f"not refused: {bad}")
         except RuntimeError:
             pass
+    # a fake-ip proxy's stand-in address is allowed; real private ranges stay refused above
+    assert ipaddress.ip_address("198.18.0.1") in FAKE_IP_RANGE
+    assert not any(ipaddress.ip_address(a) in FAKE_IP_RANGE
+                   for a in ("10.0.0.1", "127.0.0.1", "192.168.1.1", "172.16.1.21", "198.20.0.1"))
+    # YouTube links of every shape give the 11-character video id; other links give none
+    for link in ("https://www.youtube.com/watch?v=yrVkUnVxcDE&t=5", "https://youtu.be/yrVkUnVxcDE",
+                 "https://www.youtube.com/shorts/yrVkUnVxcDE", "https://m.youtube.com/live/yrVkUnVxcDE"):
+        assert video_id(link) == "yrVkUnVxcDE", link
+    assert video_id("https://www.youtube.com/@GtownMasjid") is None
+    assert stamp(3725.9) == "01:02:05"
     assert to_uri("https://x.org/a b/حكم") == "https://x.org/a%20b/%D8%AD%D9%83%D9%85"
     assert to_uri("https://x.org/a%20b?q=1") == "https://x.org/a%20b?q=1"
     assert same_page("https://binbaz.org.sa/fatwas/12835/x", "https://binbaz.org.sa/fatwas/12835/%D8%AD")
