@@ -96,6 +96,11 @@ old copy is kept in `halal-ai-guidelines-backups`. If you added your own rulings
 Install [yt-dlp](https://github.com/yt-dlp/yt-dlp) and the skill also searches 13 approved
 YouTube channels. Videos are treated as leads only, never as exact quotes.
 
+To read a video's captions reliably, also install the transcript reader for the same Python
+that runs `halal.py`: `python3 -m pip install youtube-transcript-api`. It is tried first, and
+yt-dlp is the fallback. When YouTube rate-limits the computer, `read` waits and retries (about
+7 minutes at most) before it reports the video as blocked, never as "no captions".
+
 ---
 
 ## What is inside
