@@ -10,6 +10,7 @@ Safe to run again: it replaces the skill files (the old copy is kept as a backup
 skills folder) and never adds the always-on rule twice. The older wording of the rule is
 updated in place.
 """
+import filecmp
 import shutil
 import subprocess
 import sys
@@ -32,7 +33,8 @@ TOOLS = {"claude": (".claude", "CLAUDE.md"), "codex": (".codex", "AGENTS.md"),
 def install(tool):
     home = Path.home() / TOOLS[tool][0]
     dest, rules = home / "skills" / "halal-ai-guidelines", home / TOOLS[tool][1]
-    if not (dest.exists() and dest.resolve() == SRC):
+    # Same files already there (or installing from the skills folder itself): nothing to back up.
+    if not all((dest / f).is_file() and filecmp.cmp(SRC / f, dest / f, shallow=False) for f in FILES):
         if dest.exists() or dest.is_symlink():
             # Backups live OUTSIDE the skills folder: a copy inside it would load as a second skill.
             stamp, n = time.strftime("%Y%m%d-%H%M%S"), 1
